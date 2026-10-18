@@ -15,7 +15,7 @@ h1{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:44
 h1:after{content:"";display:block;width:64px;height:6px;background:var(--red);margin:12px 0 4px}
 h2{font-family:var(--serif);font-weight:900;font-size:30px;letter-spacing:-.02em}
 .card{background:#f7eedb;border:2px solid var(--ink);border-radius:0;padding:20px;margin-bottom:18px;box-shadow:7px 7px 0 var(--ink);position:relative}
-#v-create .card:before{content:"No. 128 — Form A";position:absolute;top:-11px;right:14px;background:var(--paper);padding:0 8px;font:600 10px var(--monof);letter-spacing:.12em;color:var(--red);text-transform:uppercase}
+#v-create .card:before{content:"No. 01 — Form A";position:absolute;top:-11px;right:14px;background:var(--paper);padding:0 8px;font:600 10px var(--monof);letter-spacing:.12em;color:var(--red);text-transform:uppercase}
 label{display:block;font:600 11px var(--monof);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin:16px 0 6px}
 input,select,textarea{width:100%;background:var(--paper);border:0;border-bottom:2px solid var(--ink);color:var(--ink);border-radius:0;padding:11px 4px;font:inherit;font-size:18px;outline:none}input:focus,select:focus{background:#fff6e3;border-bottom-color:var(--red)}
 .seg{display:flex;border:2px solid var(--ink);padding:0;gap:0}.seg button{flex:1;border:0;background:var(--paper);color:var(--ink);padding:10px;font:600 12px var(--monof);letter-spacing:.06em;text-transform:uppercase}.seg button+button{border-left:2px solid var(--ink)}.seg button.on{background:var(--ink);color:var(--paper)}

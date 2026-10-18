@@ -61,9 +61,10 @@ Devnet: `cp .env.example .env`, set `CLUSTER=devnet`, then `npm run dev` (fund y
 ## Environment variables
 | Var | Default | Notes |
 |---|---|---|
-| `CLUSTER` | `devnet` | `devnet` or `mainnet` |
+| `CLUSTER` | `devnet` | `devnet`, `mainnet` (alias `mainnet-beta`) or `localnet` |
 | `HB_RPC` | public cluster RPC | server-side RPC |
-| `HB_PUBLIC_RPC` | `HB_RPC` | RPC given to browsers — never put a private key-bearing URL here |
+| `HB_PUBLIC_RPC` | `/api/rpc` | RPC given to browsers. Default is a same-origin proxy to `HB_RPC` (method allowlist + rate limit), so a keyed `HB_RPC` never reaches the client |
+| `HB_PUBLIC_WS` | public cluster WS | websocket used by browsers for confirmations |
 | `PORT` | `5173` | |
 | `DB` | `./data.json` | JSON store |
 | `TEST` | – | `1` enables the test-only expire endpoint |

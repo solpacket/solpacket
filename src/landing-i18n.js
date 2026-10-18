@@ -1,5 +1,5 @@
 const {getLang,setLang,mountToggle}=require('./lang');
-const ZH={navHow:'怎麼用',navTrust:'資金安全',navApp:'打開 App ↗',meta1:'第 01 期 — Devnet 版',meta2:'創刊 2026 · Solana',
+const ZH={navHow:'怎麼用',navTrust:'資金安全',navApp:'打開 App ↗',meta1:'第 01 期 — 主網版',meta2:'創刊 2026 · Solana',
 h1:'把錢，',h2:'<i>折</i>進',h3:'一條<em>連結。</em>',stamp:'不託管 · 免註冊 · 不囉嗦 · 不託管 · 免註冊 ·',
 lede:'把 SOL 裝進紅包、封好，連結丟到哪都行。誰先打開誰就領走——<u>不需要錢包地址</u>。',
 cta:'包一個紅包',scroll:'往下滑，撕開它 ↓',forYou:'給你的 —',claimed:'SOL · 已領取',tear:'沿 此 撕 開 ✂ - - - -',
@@ -11,9 +11,9 @@ a3h:'搶下去。',a3p:'貼上地址，或當場開一個新的瀏覽器錢包�
 a4h:'一毛不少。',a4p:'過期沒人領？按一下，剩下的每一個 lamport 都退回發送者。',
 f1:'我們從不',f2:'碰你的',f3:'<em>錢。</em>',f4:'今晚',f5:'<i>就發一個。</i>',
 exA:'證物 A',nAp:'每個紅包都有自己的一次性託管錢包，金鑰只存在你的連結裡。',exB:'證物 B',nBp:'伺服器只負責排隊分配，看不到金鑰，也動不了資金。',
-n3:'託管，永遠',n4:'每包最多份數',n5:'每次領取手續費 SOL',foot:'Devnet 測試版 · 尚未審計 · 開源',
+n3:'託管，永遠',n4:'每包最多份數',n5:'每次領取手續費 SOL',foot:'測試版 · 尚未審計 · 開源',
 mq:'恭喜發財 ✺ 0.888 SOL ✺ 拼手氣 ✺ 一條連結 ✺ 大吉大利 ✺ 過期自動可退 ✺ 恭喜發財 ✺ 0.888 SOL ✺ 拼手氣 ✺ 一條連結 ✺ 大吉大利 ✺ 過期自動可退 ✺&nbsp;',
-tkTr:'金庫',tkScan:'Solscan 查看 ↗',tkTrN:'手續費都進這裡，每一筆回購與銷毀都從這個錢包發出。',tkKick:'站內代幣 · 將在 pump.fun 發行',tkCA:'即將公布',tkCopy:'複製',tkPlan:'規劃中 · 尚未上線',tk1:'每個紅包收 <strong>1% 協議費</strong>，全部用來回購 $HONGBAO。',tk2:'pump.fun 的<strong>創作者分潤</strong>也拿去回購。',tk3:'<strong>買回的代幣直接銷毀</strong>，每筆交易都公開。',tk4:'<strong>持幣者</strong>發紅包免手續費，還能解鎖<span class="gold">金色紅包</span>。',tkDis:'Devnet 測試版 · 尚未審計 · 非投資建議',
+tkTr:'金庫',tkScan:'Solscan 查看 ↗',tkTrN:'手續費都進這裡，每一筆回購與銷毀都從這個錢包發出。',tkKick:'站內代幣 · 將在 pump.fun 發行',tkCA:'即將公布',tkCopy:'複製',tkPlan:'規劃中 · 尚未上線',tk1:'每個紅包收 <strong>1% 協議費</strong>，全部用來回購 $HONGBAO。',tk2:'pump.fun 的<strong>創作者分潤</strong>也拿去回購。',tk3:'<strong>買回的代幣直接銷毀</strong>，每筆交易都公開。',tk4:'<strong>持幣者</strong>發紅包免手續費，還能解鎖<span class="gold">金色紅包</span>。',tkDis:'測試版 · 尚未審計 · 非投資建議',
 title:'SolPacket — Solana 上的紅包',desc:'把 SOL 和 SPL 代幣變成紅包連結。不託管，領取不需要錢包。'};
 const EN={};document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(!(k in EN))EN[k]=e.innerHTML});
 EN.title=document.title;const md=document.querySelector('meta[name=description]');EN.desc=md.content;

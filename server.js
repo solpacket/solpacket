@@ -1,7 +1,7 @@
 // SolPacket — minimal coordinator server. It NEVER receives escrow secret keys.
 const express=require('express'),fs=require('fs'),path=require('path'),crypto=require('crypto');
 const w=require('@solana/web3.js');
-const CLUSTER=process.env.CLUSTER||'devnet';
+const CLUSTER=(c=>c==='mainnet-beta'?'mainnet':c)(process.env.CLUSTER||'devnet');
 const RPC=process.env.HB_RPC||(CLUSTER==='mainnet'?'https://api.mainnet-beta.solana.com':'https://api.devnet.solana.com');
 const PORT=process.env.PORT||5173, DB=process.env.DB||path.join(__dirname,'data.json');
 const conn=new w.Connection(RPC,'confirmed');
@@ -31,7 +31,16 @@ async function verifyFee(sig,creator,mint,fee){if(typeof sig!=='string'||!sig)th
     for(const ix of tx.transaction.message.instructions)if(ix.program==='spl-token'&&/^transfer/.test(ix.parsed?.type||'')){const i=ix.parsed.info;if(i.destination===td&&i.authority===creator)paid+=BigInt(i.tokenAmount?.amount||i.amount||0)}}
   if(paid<BigInt(fee))throw`fee: treasury received ${paid}, expected ${fee}`;}
 const isPk=s=>{try{new w.PublicKey(s);return true}catch{return false}};
-app.get('/api/config',(q,r)=>r.json({cluster:CLUSTER,rpc:process.env.HB_PUBLIC_RPC||RPC,feeBps:FEE_BPS,treasury:TREASURY,hongbaoMint:HB_MINT,holderMin:HB_MINT?HOLDER_MIN:0}));
+// Browser RPC: never expose HB_RPC (may carry an API key). Default = same-origin proxy with method allowlist.
+const RPC_ALLOW=new Set(['getLatestBlockhash','sendTransaction','getSignatureStatuses','getBalance','getTokenAccountBalance','getBlockHeight','getAccountInfo','getMinimumBalanceForRentExemption','isBlockhashValid','getEpochInfo','getSlot','getFeeForMessage']);
+const rpcHits=new Map();setInterval(()=>rpcHits.clear(),60000).unref();
+app.post('/api/rpc',async(q,r)=>{const ip=(q.headers['x-forwarded-for']||q.ip||'').split(',')[0].trim();const n=(rpcHits.get(ip)||0)+1;rpcHits.set(ip,n);
+  if(n>120)return r.status(429).json({jsonrpc:'2.0',id:null,error:{code:-32005,message:'rate limited'}});
+  const b=q.body;if(!b||Array.isArray(b)||!RPC_ALLOW.has(b.method))return r.status(403).json({jsonrpc:'2.0',id:b&&b.id||null,error:{code:-32601,message:'method not allowed'}});
+  try{const x=await fetch(RPC,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:b.id,method:b.method,params:b.params})});r.status(x.status).type('json').send(await x.text())}
+  catch{r.status(502).json({jsonrpc:'2.0',id:b.id,error:{code:-32000,message:'upstream error'}})}});
+const PUBLIC_WS=process.env.HB_PUBLIC_WS||({mainnet:'wss://api.mainnet-beta.solana.com',devnet:'wss://api.devnet.solana.com'}[CLUSTER]||null);
+app.get('/api/config',(q,r)=>r.json({cluster:CLUSTER,rpc:process.env.HB_PUBLIC_RPC||'/api/rpc',ws:PUBLIC_WS,feeBps:FEE_BPS,treasury:TREASURY,hongbaoMint:HB_MINT,holderMin:HB_MINT?HOLDER_MIN:0}));
 app.get('/api/fee',async(q,r)=>{if(q.query.creator&&!isPk(q.query.creator))return r.status(400).json({error:'bad address'});
   r.json({feeBps:q.query.creator?await feeBpsFor(q.query.creator):FEE_BPS,treasury:TREASURY})});
 // Create: creator registers metadata after funding escrow. Server verifies escrow balance on-chain.
@@ -87,4 +96,4 @@ app.post('/api/envelopes/:id/refund',async(q,r)=>{try{const e=db.env[q.params.id
   e.refunded={sig,at:Date.now()};save();r.json(pub(e));}catch(x){r.status(400).json({error:String(x.message||x)})}});
 // test hook: shorten expiry (only when TEST=1)
 if(process.env.TEST==='1')app.post('/api/test/expire/:id',(q,r)=>{db.env[q.params.id].expiry=Date.now()-1;save();r.json({ok:1})});
-app.listen(PORT,()=>console.log(`hongbao on http://localhost:${PORT} cluster=${CLUSTER} rpc=${RPC}`));
+app.listen(PORT,()=>console.log(`hongbao on http://localhost:${PORT} cluster=${CLUSTER} rpc=${RPC.replace(/[?].*$/,'?…')}`));

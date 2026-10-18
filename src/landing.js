@@ -62,3 +62,7 @@ I.onSwitch(()=>{if(reduce){document.getElementById('cnt').textContent='0.888';re
  gsap.fromTo('.ht .w',{yPercent:110,rotate:4},{yPercent:0,rotate:0,stagger:.1,duration:1,ease:'expo.out'});
  document.fonts.ready.then(()=>requestAnimationFrame(()=>ScrollTrigger.refresh()));});
 if(!reduce)document.fonts&&document.fonts.ready.then(()=>ScrollTrigger.refresh());
+
+// Show $HONGBAO CA once HB_HONGBAO_MINT is configured on the server.
+fetch('/api/config').then(r=>r.json()).then(c=>{if(!c.hongbaoMint)return;const ca=document.getElementById('ca'),b=document.getElementById('cacopy');if(!ca)return;
+  ca.removeAttribute('data-i18n');ca.textContent=c.hongbaoMint;if(b){b.disabled=false;b.onclick=()=>navigator.clipboard.writeText(c.hongbaoMint).then(()=>{const o=b.textContent;b.textContent='✓';setTimeout(()=>b.textContent=o,1200)})}}).catch(()=>{});
