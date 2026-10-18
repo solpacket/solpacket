@@ -8,12 +8,18 @@ function splitShares(total,count,mode,min=1){total=BigInt(total);const M=BigInt(
   for(;n>1;n--){const max=left*2n/BigInt(n);const r=BigInt(Math.floor(Math.random()*Number(max)));const v=r>left?left:r;s.push(v+M);left-=v;}
   s.push(left+M);return s.sort(()=>Math.random()-.5).map(Number);}
 function overhead(count,mint){return mint?890880+count*(FEE+ATA_RENT)+FEE:count*FEE;}
-async function buildFundTx(conn,creator,escrow,{mint,total,count}){
+const feeAmount=(total,bps)=>Number(BigInt(total)*BigInt(bps|0)/10000n);
+// Protocol fee: `fee` base units (lamports or token units) to `treasury` in the same funding tx.
+async function buildFundTx(conn,creator,escrow,{mint,total,count,fee=0,treasury=null}){
   const tx=new w.Transaction();
   tx.add(w.SystemProgram.transfer({fromPubkey:creator,toPubkey:escrow,lamports:(mint?0:total)+overhead(count,mint)}));
   if(mint){const m=new w.PublicKey(mint),info=await spl.getMint(conn,m),src=spl.getAssociatedTokenAddressSync(m,creator),dst=spl.getAssociatedTokenAddressSync(m,escrow);
     tx.add(spl.createAssociatedTokenAccountIdempotentInstruction(creator,dst,escrow,m));
-    tx.add(spl.createTransferCheckedInstruction(src,m,dst,creator,BigInt(total),info.decimals));}
+    tx.add(spl.createTransferCheckedInstruction(src,m,dst,creator,BigInt(total),info.decimals));
+    if(fee>0&&treasury){const t=new w.PublicKey(treasury),td=spl.getAssociatedTokenAddressSync(m,t,true);
+      tx.add(spl.createAssociatedTokenAccountIdempotentInstruction(creator,td,t,m));
+      tx.add(spl.createTransferCheckedInstruction(src,m,td,creator,BigInt(fee),info.decimals));}}
+  else if(fee>0&&treasury)tx.add(w.SystemProgram.transfer({fromPubkey:creator,toPubkey:new w.PublicKey(treasury),lamports:fee}));
   tx.feePayer=creator;tx.recentBlockhash=(await conn.getLatestBlockhash()).blockhash;return tx;}
 async function buildClaimTx(conn,escrowKp,env,to,amount){
   const tx=new w.Transaction(),toPk=new w.PublicKey(to);
@@ -32,4 +38,4 @@ async function buildRefundTx(conn,escrowKp,env){
   if(lam>FEE)tx.add(w.SystemProgram.transfer({fromPubkey:e,toPubkey:cr,lamports:lam-FEE}));
   tx.feePayer=e;tx.recentBlockhash=(await conn.getLatestBlockhash()).blockhash;tx.sign(escrowKp);return tx.serialize().toString('base64');}
 const encKey=kp=>bs58.encode(kp.secretKey), decKey=s=>w.Keypair.fromSecretKey(bs58.decode(s));
-module.exports={w,spl,bs58,splitShares,overhead,buildFundTx,buildClaimTx,buildRefundTx,encKey,decKey,FEE};
+module.exports={feeAmount,w,spl,bs58,splitShares,overhead,buildFundTx,buildClaimTx,buildRefundTx,encKey,decKey,FEE};

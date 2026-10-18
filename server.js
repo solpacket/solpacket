@@ -11,8 +11,29 @@ const app=express();app.use(express.json({limit:'64kb'}));app.use(express.static
 const pub=e=>({id:e.id,escrow:e.escrow,mint:e.mint,decimals:e.decimals,symbol:e.symbol,total:e.total,count:e.count,mode:e.mode,message:e.message,expiry:e.expiry,creator:e.creator,createdAt:e.createdAt,refunded:e.refunded||null,
   claims:e.claims.filter(c=>c.sig).map(c=>({address:c.address,amount:c.amount,sig:c.sig,at:c.at})),remaining:e.count-e.claims.filter(c=>c.sig).length,
   remainingAmount:e.shares.slice(e.claims.filter(c=>c.sig).length).reduce((a,b)=>a+b,0)});
+// Protocol fee (1%) -> treasury. Disabled when HB_TREASURY is unset.
+const TREASURY=process.env.HB_TREASURY||null, FEE_BPS=TREASURY?100:0;
+const HB_MINT=process.env.HB_HONGBAO_MINT||null, HOLDER_MIN=Number(process.env.HB_HOLDER_MIN||0);
+async function holderExempt(owner){if(!HB_MINT||!(HOLDER_MIN>0))return false;
+  try{const r=await conn.getParsedTokenAccountsByOwner(new w.PublicKey(owner),{mint:new w.PublicKey(HB_MINT)});
+    return r.value.reduce((a,x)=>a+Number(x.account.data.parsed.info.tokenAmount.uiAmountString||0),0)>=HOLDER_MIN}catch{return false}}
+async function feeBpsFor(creator){return FEE_BPS&&!(await holderExempt(creator))?FEE_BPS:0}
+const feeOf=(total,bps)=>Number(BigInt(total)*BigInt(bps)/10000n);
+// Verify the confirmed funding tx (signed by creator) moved >= fee to the treasury.
+async function verifyFee(sig,creator,mint,fee){if(typeof sig!=='string'||!sig)throw'fee: fundSig required';
+  if(Object.values(db.env).some(e=>e.fundSig===sig))throw'fee: fundSig reused';
+  const tx=await conn.getParsedTransaction(sig,{commitment:'confirmed',maxSupportedTransactionVersion:0});
+  if(!tx||tx.meta?.err)throw'fee: funding tx not found';
+  if(!tx.transaction.message.accountKeys.some(k=>k.signer&&k.pubkey.toBase58()===creator))throw'fee: funding tx not signed by creator';
+  let paid=0n;
+  if(!mint){for(const ix of tx.transaction.message.instructions)if(ix.program==='system'&&ix.parsed?.type==='transfer'){const i=ix.parsed.info;if(i.source===creator&&i.destination===TREASURY)paid+=BigInt(i.lamports)}}
+  else{const td=require('@solana/spl-token').getAssociatedTokenAddressSync(new w.PublicKey(mint),new w.PublicKey(TREASURY),true).toBase58();
+    for(const ix of tx.transaction.message.instructions)if(ix.program==='spl-token'&&/^transfer/.test(ix.parsed?.type||'')){const i=ix.parsed.info;if(i.destination===td&&i.authority===creator)paid+=BigInt(i.tokenAmount?.amount||i.amount||0)}}
+  if(paid<BigInt(fee))throw`fee: treasury received ${paid}, expected ${fee}`;}
 const isPk=s=>{try{new w.PublicKey(s);return true}catch{return false}};
-app.get('/api/config',(q,r)=>r.json({cluster:CLUSTER,rpc:process.env.HB_PUBLIC_RPC||RPC}));
+app.get('/api/config',(q,r)=>r.json({cluster:CLUSTER,rpc:process.env.HB_PUBLIC_RPC||RPC,feeBps:FEE_BPS,treasury:TREASURY,hongbaoMint:HB_MINT,holderMin:HB_MINT?HOLDER_MIN:0}));
+app.get('/api/fee',async(q,r)=>{if(q.query.creator&&!isPk(q.query.creator))return r.status(400).json({error:'bad address'});
+  r.json({feeBps:q.query.creator?await feeBpsFor(q.query.creator):FEE_BPS,treasury:TREASURY})});
 // Create: creator registers metadata after funding escrow. Server verifies escrow balance on-chain.
 app.post('/api/envelopes',async(q,r)=>{try{
   const b=q.body;if(!isPk(b.escrow)||!isPk(b.creator))throw'bad address';
@@ -24,10 +45,11 @@ app.post('/api/envelopes',async(q,r)=>{try{
   if(b.mint){const ata=await require('@solana/spl-token').getAssociatedTokenAddress(new w.PublicKey(b.mint),new w.PublicKey(b.escrow));
     const bal=await conn.getTokenAccountBalance(ata);if(BigInt(bal.value.amount)<BigInt(total))throw'escrow underfunded';}
   else{const bal=await conn.getBalance(new w.PublicKey(b.escrow));if(bal<total)throw'escrow underfunded';}
+  const bps=await feeBpsFor(b.creator),fee=feeOf(total,bps);if(fee>0)await verifyFee(b.fundSig,b.creator,b.mint||null,fee);
   const id=crypto.randomBytes(6).toString('base64url');
   db.env[id]={id,escrow:b.escrow,creator:b.creator,mint:b.mint||null,decimals:b.mint?b.decimals|0:9,symbol:(b.symbol||(b.mint?'TOKEN':'SOL')).slice(0,10),
     total,count,mode:b.mode==='random'?'random':'equal',shares,message:String(b.message||'').slice(0,140),
-    expiry:Math.max(Date.now()+60e3,Number(b.expiry)||Date.now()+864e5),createdAt:Date.now(),claims:[]};save();r.json(pub(db.env[id]));
+    expiry:Math.max(Date.now()+60e3,Number(b.expiry)||Date.now()+864e5),createdAt:Date.now(),claims:[],feeBps:bps,fee,fundSig:b.fundSig||null};save();r.json(pub(db.env[id]));
 }catch(e){r.status(400).json({error:String(e.message||e)})}});
 app.get('/api/envelopes/:id',(q,r)=>{const e=db.env[q.params.id];e?r.json(pub(e)):r.status(404).json({error:'not found'})});
 // Reserve a share for an address (one per address). Reservations expire after 2 min if unsigned.

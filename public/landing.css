@@ -69,3 +69,20 @@ html.zh .mono{letter-spacing:.12em}
 .nav nav a.ico{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1.5px solid var(--ink);background:var(--paper);transition:background .2s,color .2s}.nav nav a.ico:hover{background:var(--ink);color:var(--paper)}
 @media(max-width:520px){.nav nav{gap:8px}.nav nav a.ico{width:26px;height:26px}}
 footer a.fl{display:inline-flex;align-items:center;gap:6px}
+
+.nav nav a.tk{color:var(--red);font-weight:600}
+.token{padding:120px clamp(16px,4vw,56px) 90px;border-top:3px double var(--ink);background:linear-gradient(var(--paper),var(--paper2))}
+.tk-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px 24px;border-bottom:2px solid var(--ink);padding-bottom:18px}
+.tk-head .mono{grid-column:1/-1;color:var(--red)}
+.token .fold{font-family:var(--disp);font-size:clamp(64px,12vw,180px);line-height:.9;text-transform:uppercase;display:flex;flex-wrap:wrap;gap:0 .25em;align-items:baseline}
+.token .fold .zhn{color:var(--red);filter:url(#ink)}.token .fold i{font-family:var(--serif);text-transform:none;font-weight:400;font-size:.55em}
+.tick{font-family:var(--mono);font-weight:600;font-size:clamp(20px,3vw,34px);background:var(--red);color:var(--paper);padding:6px 14px;transform:rotate(-3deg);box-shadow:5px 5px 0 var(--ink)}
+.tk-ca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:28px 0;border:2px dashed var(--ink);padding:14px 18px;max-width:640px}
+.tk-ca code{font-size:15px;padding:4px 10px;flex:1}.tk-ca button{background:var(--paper);border:2px solid var(--ink);padding:8px 14px;cursor:not-allowed;opacity:.6}
+.plan{display:inline-block;border:2px solid var(--red);color:var(--red);padding:4px 10px;transform:rotate(-2deg);margin-bottom:18px}
+.tk-mech ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0;border-top:1px solid var(--ink)}
+.tk-mech li{padding:22px 18px 26px 0;border-bottom:1px solid var(--ink);display:flex;gap:14px}
+.tk-mech li b{font-family:var(--disp);font-size:42px;color:var(--red);line-height:1}.tk-mech li p{font-size:19px;line-height:1.4}
+.gold{color:var(--paper);background:var(--gold);padding:0 .25em}
+.tk-dis{margin-top:28px;opacity:.75}
+@media (max-width:720px){.tk-head{grid-template-columns:1fr}.tick{justify-self:start}.nav nav a.tk{display:none}}

@@ -40,4 +40,38 @@ async function refundTest(){console.log('\n== refund after expiry (2 of 3 unclai
   env=await j(`/api/envelopes/${env.id}/refund`,{tx:await C.buildRefundTx(conn,escrow,env)});
   const after=await conn.getBalance(creator.publicKey),esc=await conn.getBalance(escrow.publicKey);
   ok(after-before>=0.4e9&&esc===0,`refunded ${(after-before)/1e9} SOL to creator, escrow now ${esc}`);}
-(async()=>{await run(false);await run(true);await refundTest();console.log('\nALL PASSED')})().catch(e=>{console.error(e);process.exit(1)});
+// Protocol fee: spawn a second server with HB_TREASURY + holder exemption configured.
+async function feeTest(){console.log('\n== 1% protocol fee (HB_TREASURY) + holder exemption ==');
+  const treasury=w.Keypair.generate().publicKey.toBase58(),boss=w.Keypair.generate();await air(boss.publicKey,2);
+  const hbMint=await C.spl.createMint(conn,boss,boss.publicKey,null,6);
+  const port=5291,FAPI='http://localhost:'+port,db=require('os').tmpdir()+'/hb-fee-'+Date.now()+'.json';
+  const srv=require('child_process').spawn(process.execPath,[__dirname+'/../server.js'],{env:{...process.env,PORT:port,DB:db,HB_RPC:RPC,HB_TREASURY:treasury,HB_HONGBAO_MINT:hbMint.toBase58(),HB_HOLDER_MIN:'1000',TEST:''},stdio:'ignore'});
+  const fj=async(p,b)=>{const r=await fetch(FAPI+p,b?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(b)}:{});const d=await r.json();if(!r.ok)throw new Error(p+': '+d.error);return d};
+  try{for(let i=0;i<50;i++){try{await fj('/api/config');break}catch{await new Promise(r=>setTimeout(r,200))}}
+    const cfg=await fj('/api/config');ok(cfg.feeBps===100&&cfg.treasury===treasury,'config exposes 1% fee + treasury');
+    const fund=async(creator,{mint=null,total,fee})=>{const escrow=w.Keypair.generate(),tx=await C.buildFundTx(conn,creator.publicKey,escrow.publicKey,{mint,total,count:2,fee,treasury});tx.sign(creator);
+      const sig=await conn.sendRawTransaction(tx.serialize());await conn.confirmTransaction(sig,'confirmed');return {escrow,sig}};
+    const reg=(creator,f,{mint=null,total,decimals=9})=>fj('/api/envelopes',{fundSig:f.sig,escrow:f.escrow.publicKey.toBase58(),creator:creator.publicKey.toBase58(),mint,decimals,count:2,mode:'equal',shares:C.splitShares(total,2,'equal'),expiry:Date.now()+3600e3});
+    const a=w.Keypair.generate();await air(a.publicKey,3);const total=0.3e9,fee=C.feeAmount(total,100);ok(fee===3e6,"fee = 1% of 0.3 SOL = 0.003 SOL");
+    // no fee paid -> rejected
+    let f=await fund(a,{total,fee:0});try{await reg(a,f,{total});ok(false,'nofee')}catch(e){ok(/fee/.test(e.message),'funding without fee rejected: '+e.message.split(': ').slice(1).join(': '))}
+    // underpaid -> rejected
+    f=await fund(a,{total,fee:fee-1});try{await reg(a,f,{total});ok(false,'under')}catch(e){ok(/expected/.test(e.message),'underpaid fee rejected')}
+    // missing fundSig -> rejected
+    f=await fund(a,{total,fee});try{await fj('/api/envelopes',{escrow:f.escrow.publicKey.toBase58(),creator:a.publicKey.toBase58(),count:2,mode:'equal',shares:C.splitShares(total,2,'equal')});ok(false,'nosig')}catch(e){ok(/fundSig required/.test(e.message),'missing fundSig rejected')}
+    const before=await conn.getBalance(new w.PublicKey(treasury));const env=await reg(a,f,{total});
+    ok(env.total===total&&(await conn.getBalance(new w.PublicKey(treasury)))-before>=0,'fee paid -> envelope created');
+    {const tb=await conn.getBalance(new w.PublicKey(treasury));ok(tb===2*fee-1,'treasury on-chain = (fee-1)+fee lamports ('+tb/1e9+' SOL)')}
+    // reuse of the same funding tx -> rejected
+    const e2=w.Keypair.generate();try{await fj('/api/envelopes',{fundSig:f.sig,escrow:f.escrow.publicKey.toBase58(),creator:a.publicKey.toBase58(),count:2,mode:'equal',shares:C.splitShares(total,2,'equal')});ok(false,'reuse')}catch(e){ok(/reuse/.test(e.message),'funding tx/escrow reuse rejected')}
+    // SPL fee in tokens to treasury ATA
+    const tm=await C.spl.createMint(conn,a,a.publicKey,null,6),ata=await C.spl.getOrCreateAssociatedTokenAccount(conn,a,tm,a.publicKey);await C.spl.mintTo(conn,a,tm,ata.address,a,1000e6);
+    const st=500e6,sf=C.feeAmount(st,100);f=await fund(a,{mint:tm.toBase58(),total:st,fee:sf});await reg(a,f,{mint:tm.toBase58(),total:st,decimals:6});
+    const tb=await conn.getTokenAccountBalance(C.spl.getAssociatedTokenAddressSync(tm,new w.PublicKey(treasury),true));ok(Number(tb.value.amount)===sf,'SPL fee '+sf+' units landed in treasury ATA');
+    // holder exemption: >= HB_HOLDER_MIN $HONGBAO -> 0% and no fee needed
+    const h=w.Keypair.generate();await air(h.publicKey,3);const hata=await C.spl.getOrCreateAssociatedTokenAccount(conn,boss,hbMint,h.publicKey);await C.spl.mintTo(conn,boss,hbMint,hata.address,boss,1000e6);
+    ok((await fj('/api/fee?creator='+h.publicKey.toBase58())).feeBps===0,'holder (1000 $HONGBAO) quoted 0%');
+    ok((await fj('/api/fee?creator='+a.publicKey.toBase58())).feeBps===100,'non-holder quoted 1%');
+    f=await fund(h,{total,fee:0});const he=await fj('/api/envelopes',{escrow:f.escrow.publicKey.toBase58(),creator:h.publicKey.toBase58(),count:2,mode:'equal',shares:C.splitShares(total,2,'equal')});ok(he.remaining===2,'holder created envelope fee-free');
+  }finally{srv.kill();try{require('fs').unlinkSync(db)}catch{}}}
+(async()=>{await run(false);await run(true);await refundTest();await feeTest();console.log('\nALL PASSED')})().catch(e=>{console.error(e);process.exit(1)});

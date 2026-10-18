@@ -13,6 +13,7 @@ f1:'我們從不',f2:'碰你的',f3:'<em>錢。</em>',f4:'今晚',f5:'<i>就發�
 exA:'證物 A',nAp:'每個紅包都有自己的一次性託管錢包，金鑰只存在你的連結裡。',exB:'證物 B',nBp:'伺服器只負責排隊分配，看不到金鑰，也動不了資金。',
 n3:'託管，永遠',n4:'每包最多份數',n5:'每次領取手續費 SOL',foot:'Devnet 測試版 · 尚未審計 · 開源',
 mq:'恭喜發財 ✺ 0.888 SOL ✺ 拼手氣 ✺ 一條連結 ✺ 大吉大利 ✺ 過期自動可退 ✺ 恭喜發財 ✺ 0.888 SOL ✺ 拼手氣 ✺ 一條連結 ✺ 大吉大利 ✺ 過期自動可退 ✺&nbsp;',
+tkKick:'站內代幣 · 將在 pump.fun 發行',tkCA:'即將公布',tkCopy:'複製',tkPlan:'規劃中 · 尚未上線',tk1:'每個紅包收 <strong>1% 協議費</strong>，全部用來回購 $HONGBAO。',tk2:'pump.fun 的<strong>創作者分潤</strong>也拿去回購。',tk3:'<strong>買回的代幣直接銷毀</strong>，每筆交易都公開。',tk4:'<strong>持幣者</strong>發紅包免手續費，還能解鎖<span class="gold">金色紅包</span>。',tkDis:'Devnet 測試版 · 尚未審計 · 非投資建議',
 title:'SolPacket — Solana 上的紅包',desc:'把 SOL 和 SPL 代幣變成紅包連結。不託管，領取不需要錢包。'};
 const EN={};document.querySelectorAll('[data-i18n]').forEach(e=>{const k=e.dataset.i18n;if(!(k in EN))EN[k]=e.innerHTML});
 EN.title=document.title;const md=document.querySelector('meta[name=description]');EN.desc=md.content;

@@ -67,6 +67,15 @@ Devnet: `cp .env.example .env`, set `CLUSTER=devnet`, then `npm run dev` (fund y
 | `PORT` | `5173` | |
 | `DB` | `./data.json` | JSON store |
 | `TEST` | – | `1` enables the test-only expire endpoint |
+| `HB_TREASURY` | – | Treasury address for the 1% protocol fee. Unset = fee disabled (UI shows 0%) |
+| `HB_HONGBAO_MINT` | – | $HONGBAO mint for the holder exemption (optional) |
+| `HB_HOLDER_MIN` | – | Wallets holding ≥ this many whole $HONGBAO pay no fee (optional) |
+
+## Protocol fee & $HONGBAO
+- When `HB_TREASURY` is set, the creator's funding transaction includes a **1% fee** transfer to the treasury (lamports for SOL packets, tokens to the treasury's ATA for SPL packets). The create form shows the fee in the cost line.
+- The server **verifies the fee on-chain**: it fetches the confirmed funding tx (`fundSig`), checks it was signed by the creator and that the treasury received ≥ 1% of the total; each funding tx can only register one packet.
+- Holder exemption: with `HB_HONGBAO_MINT` + `HB_HOLDER_MIN` set, creators holding at least that many $HONGBAO pay 0%. `GET /api/fee?creator=<address>` returns the applicable rate.
+- **Buybacks and burns are done manually** from the treasury wallet; every buyback/burn tx is posted publicly. Nothing is automated on-chain yet. Devnet beta, not audited, not financial advice.
 
 ## Roadmap
 - [ ] Anchor program escrow (PDA vault, server-signed ed25519 claim vouchers, creator-only refund)
