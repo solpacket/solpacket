@@ -1,0 +1,46 @@
+{
+  "name": "solpacket",
+  "version": "0.1.0",
+  "description": "Send SOL & SPL tokens as on-chain red-envelope links. No custody, no wallet needed to claim.",
+  "main": "server.js",
+  "scripts": {
+    "build": "esbuild src/app.js --bundle --minify --platform=browser --define:global=window --inject:src/shim.js --outfile=public/app.bundle.js && esbuild src/landing.js --bundle --minify --outfile=public/landing.bundle.js",
+    "start": "node server.js",
+    "e2e": "node scripts/e2e.js",
+    "dev": "npm run build && node server.js",
+    "shots": "node scripts/shots.js"
+  },
+  "keywords": [
+    "solana",
+    "red-envelope",
+    "hongbao",
+    "tips",
+    "web3"
+  ],
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.99.0",
+    "bs58": "^6.0.0",
+    "buffer": "^6.0.3",
+    "esbuild": "^0.28.2",
+    "express": "^5.3.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.27",
+    "puppeteer-core": "^24.43.1",
+    "qrcode": "^1.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solpacket/solpacket.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "private": false,
+  "homepage": "https://solpacket.fun",
+  "bugs": {
+    "url": "https://github.com/solpacket/solpacket/issues"
+  }
+}

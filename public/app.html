@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SolPacket — Send SOL red envelopes</title><meta property="og:title" content="SolPacket"><meta property="og:description" content="Send SOL & tokens as red-envelope links. No custody. No wallet needed to claim."><meta name="twitter:card" content="summary"><meta name="twitter:site" content="@solpacket_app"><link rel="stylesheet" href="/style.css"></head><body>
+<nav class="nav"><a class="logo" href="/"><i></i>SolPacket</a><div class="row" style="flex:0;gap:8px"><span id="cl" class="pill" style="white-space:nowrap"></span></div></nav>
+<main class="wrap">
+<section id="v-create">
+ <h1 style="font-size:30px;margin-bottom:6px" data-t="createTitle"></h1><p class="mut" data-t="createSub"></p>
+ <div class="card" style="margin-top:16px">
+  <div class="row"><button id="connect" class="btn ghost" data-t="connect"></button></div><p id="who" class="mut mono" style="margin-top:8px"></p>
+  <label data-t="asset"></label><div class="seg" id="asset"><button class="on" data-v="sol">SOL</button><button data-v="spl" data-t="token"></button></div>
+  <div id="mintbox" class="hide"><label data-t="mint"></label><input id="mint" placeholder="Mint address"></div>
+  <div class="row"><div><label data-t="total"></label><input id="total" inputmode="decimal" value="0.3"></div><div><label data-t="count"></label><input id="count" inputmode="numeric" value="3"></div></div>
+  <label data-t="mode"></label><div class="seg" id="mode"><button class="on" data-v="random" data-t="random"></button><button data-v="equal" data-t="equal"></button></div>
+  <label data-t="msg"></label><input id="msg" maxlength="140" data-tp="msgPh">
+  <label data-t="expiry"></label><select id="exp"><option value="1">1h</option><option value="24" selected>24h</option><option value="72">3d</option><option value="168">7d</option></select>
+  <p class="mut" id="cost" style="margin-top:12px"></p>
+  <button id="go" class="btn red" style="width:100%;margin-top:16px" data-t="send"></button>
+ </div>
+ <div class="warn" data-t="trustNote"></div>
+</section>
+<section id="v-share" class="hide"><div class="card" style="text-align:center">
+ <h2 data-t="ready"></h2><p class="mut" data-t="readySub" style="margin:6px 0"></p><canvas id="qr" class="qr"></canvas>
+ <input id="link" readonly class="mono"><div class="row" style="margin-top:12px"><button id="copy" class="btn" data-t="copy"></button><a id="tw" class="btn ghost" target="_blank" style="text-decoration:none;text-align:center" data-t="shareX"></a></div>
+ <a id="open" class="mut" style="display:block;margin-top:14px" data-t="openIt"></a></div>
+ <div class="warn" data-t="keepLink"></div></section>
+<section id="v-claim" class="hide">
+ <div class="env" id="env"><button class="seal" id="seal">◎</button></div>
+ <p id="cmsg" style="text-align:center;font-size:18px;font-weight:700"></p><p id="cfrom" class="mut" style="text-align:center;margin:4px 0 14px"></p>
+ <div class="card" id="claimbox">
+  <div id="got" class="hide" style="text-align:center"><p class="mut" data-t="youGot"></p><div class="big neon" id="gotAmt"></div><a id="gotTx" class="mut" target="_blank" data-t="viewTx"></a></div>
+  <div id="claimform"><label data-t="addr"></label><input id="addr" class="mono" placeholder="Solana address">
+  <div class="row" style="margin-top:10px"><button id="useWallet" class="btn ghost" data-t="useWallet"></button><button id="newWallet" class="btn ghost" data-t="newWallet"></button></div>
+  <div id="backup" class="warn hide" style="margin-top:12px"><b data-t="backupT"></b><p data-t="backupD"></p><p class="mono" id="sk"></p><button id="copysk" class="pill" data-t="copy"></button></div>
+  <button id="claim" class="btn red" style="width:100%;margin-top:14px" data-t="claim"></button></div>
+ </div>
+ <div class="card"><div style="display:flex;justify-content:space-between"><b data-t="board"></b><span class="mut" id="left"></span></div><div class="bar" style="margin:10px 0"><i id="barI"></i></div><ul class="list" id="board"></ul></div>
+ <div class="card hide" id="refundbox"><b data-t="refundT"></b><p class="mut" id="refundD" style="margin:6px 0 12px"></p><button id="refund" class="btn" style="width:100%" data-t="refund"></button></div>
+</section>
+</main><script src="/app.bundle.js"></script></body></html>

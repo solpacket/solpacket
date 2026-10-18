@@ -1,0 +1,25 @@
+:root{--bg:#07050a;--card:#140b10;--red:#ff2d4b;--red2:#c4102c;--gold:#ffc94d;--gold2:#ffe9a8;--txt:#f6eee6;--mut:#a8949a;--line:#ffffff14}
+*{box-sizing:border-box;margin:0}html,body{background:var(--bg);color:var(--txt);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}button{font:inherit;cursor:pointer}
+.nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;backdrop-filter:blur(12px);background:#07050a99;border-bottom:1px solid var(--line)}
+.logo{font-weight:900;letter-spacing:.04em;display:flex;gap:8px;align-items:center;color:var(--txt);text-decoration:none}.logo i{width:22px;height:28px;border-radius:5px;background:linear-gradient(160deg,var(--red),var(--red2));box-shadow:0 0 14px var(--red);position:relative}.logo i:after{content:"";position:absolute;left:50%;top:9px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--gold)}
+.pill{border:1px solid var(--line);background:#ffffff08;color:var(--txt);border-radius:99px;padding:8px 14px;font-size:14px}
+.btn{border:0;border-radius:14px;padding:15px 22px;font-weight:800;font-size:16px;color:#2a0508;background:linear-gradient(180deg,var(--gold2),var(--gold));box-shadow:0 0 0 1px #fff3 inset,0 8px 30px #ffc94d44;transition:transform .15s}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45}
+.btn.red{color:#fff;background:linear-gradient(180deg,#ff5168,var(--red2));box-shadow:0 8px 30px #ff2d4b55}.btn.ghost{background:#ffffff0a;color:var(--txt);box-shadow:0 0 0 1px var(--line) inset}
+.neon{color:var(--gold);text-shadow:0 0 18px #ffc94d88}.redneon{color:var(--red);text-shadow:0 0 22px #ff2d4baa}
+.wrap{max-width:520px;margin:0 auto;padding:84px 18px 60px}
+.card{background:linear-gradient(180deg,#1b0e14,#100a0d);border:1px solid var(--line);border-radius:22px;padding:20px;margin-bottom:14px;box-shadow:0 20px 60px #0008}
+label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px}
+input,select,textarea{width:100%;background:#0b0709;border:1px solid #ffffff1c;color:var(--txt);border-radius:12px;padding:13px 14px;font:inherit;font-size:16px;outline:none}input:focus,textarea:focus{border-color:var(--gold)}
+.seg{display:flex;background:#0b0709;border:1px solid #ffffff1c;border-radius:12px;padding:4px;gap:4px}.seg button{flex:1;border:0;background:none;color:var(--mut);padding:10px;border-radius:9px;font-weight:700}.seg button.on{background:linear-gradient(180deg,#ff5168,var(--red2));color:#fff}
+.row{display:flex;gap:10px}.row>*{flex:1}.mut{color:var(--mut);font-size:13px}.big{font-size:44px;font-weight:900}
+.list{list-style:none;padding:0}.list li{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}.list li b{color:var(--gold)}.list .best{color:var(--red)}
+.bar{height:8px;border-radius:9px;background:#ffffff12;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold))}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1b0e14;border:1px solid var(--gold);padding:12px 18px;border-radius:12px;z-index:99;font-size:14px}
+.env{width:210px;height:290px;margin:10px auto 18px;border-radius:22px;background:linear-gradient(165deg,#ff4561,#b10d25);position:relative;box-shadow:0 0 60px #ff2d4b66,inset 0 0 0 2px #ffffff22;display:grid;place-items:center;overflow:hidden}
+.env:before{content:"";position:absolute;top:-90px;left:-20%;width:140%;height:190px;border-radius:50%;background:linear-gradient(180deg,#d01733,#a20b22);box-shadow:0 6px 0 #0002}
+.env .seal{position:relative;z-index:2;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold) 55%,#c48a17);display:grid;place-items:center;font-size:36px;font-weight:900;color:#8a0f1f;border:0;box-shadow:0 0 30px #ffc94d88}
+.env.open .seal{animation:spin .9s ease-in-out}@keyframes spin{to{transform:rotateY(720deg)}}
+.qr{background:#fff;border-radius:14px;padding:10px;width:200px;margin:12px auto;display:block}
+.hide{display:none!important}.mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all}
+.warn{background:#ff2d4b14;border:1px solid #ff2d4b55;border-radius:12px;padding:12px;font-size:13px;line-height:1.6}

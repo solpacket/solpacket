@@ -1,0 +1,13 @@
+node_modules/
+data.json
+*.db
+.env
+.env.*
+!.env.example
+*.key
+*keypair*.json
+id.json
+public/*.bundle.js
+shots/
+test-ledger/
+.DS_Store
