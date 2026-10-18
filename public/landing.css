@@ -86,3 +86,4 @@ footer a.fl{display:inline-flex;align-items:center;gap:6px}
 .gold{color:var(--paper);background:var(--gold);padding:0 .25em}
 .tk-dis{margin-top:28px;opacity:.75}
 @media (max-width:720px){.tk-head{grid-template-columns:1fr}.tick{justify-self:start}.nav nav a.tk{display:none}}
+.tk-ca.tr{max-width:900px}.tk-ca.tr code{word-break:break-all;font-size:13px}.tk-ca.tr button{cursor:pointer;opacity:1}.tk-ca.tr a{color:var(--red)}.tk-trn{flex-basis:100%;opacity:.75;text-transform:none}
