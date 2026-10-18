@@ -1,28 +1,58 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SolPacket — On-chain red envelopes on Solana</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SolPacket — Red envelopes, on Solana</title>
 <meta name="description" content="Send SOL & SPL tokens as red-envelope links. No custody. No wallet needed to claim."><meta property="og:title" content="SolPacket — On-chain red envelopes"><meta property="og:description" content="One link. One red envelope. No wallet needed to claim."><meta property="og:type" content="website"><meta property="og:url" content="https://solpacket.fun"><link rel="canonical" href="https://solpacket.fun/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@solpacket_app">
-<link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/landing.css"></head><body>
-<canvas id="fx"></canvas>
-<nav class="nav"><a class="logo" href="/"><i></i>SolPacket</a><a href="/app.html" class="pill" style="text-decoration:none">Launch App →</a></nav>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,900;1,9..144,400;1,9..144,800&family=Anton&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/landing.css"></head><body>
+<svg width="0" height="0" style="position:absolute"><filter id="ink"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3"/></filter>
+<filter id="rough"><feTurbulence baseFrequency=".04" numOctaves="3" seed="8"/><feDisplacementMap in="SourceGraphic" scale="6"/></filter></svg>
+<div class="grain" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<header class="nav"><a class="logo" href="/"><span class="chop">福</span>SolPacket<sup>No.128</sup></a><nav><a href="#how">How</a><a href="#trust">Custody</a><a class="go mag" href="/app.html">Open the app ↗</a></nav></header>
+
 <section class="hero">
- <div class="orb o1" data-speed="-0.3"></div><div class="orb o2" data-speed="0.4"></div>
- <div class="lantern l1" data-speed="0.6">◎</div><div class="lantern l2" data-speed="0.25">$</div><div class="lantern l3" data-speed="0.8">✦</div>
- <p class="kicker">SOLANA · NO CUSTODY · INSTANT</p>
- <h1 class="split">Gift money<br><span class="redneon">on-chain</span></h1>
- <p class="sub">One link. One red envelope.<br>No wallet needed to claim.</p>
- <div class="cta"><a class="btn red" href="/app.html">🧧 Send a SolPacket</a><a class="btn ghost" href="#how">How it works ↓</a></div>
- <div class="scrollhint">SCROLL</div>
+ <div class="meta mono"><span>Vol. 01 — Devnet edition</span><span>Est. 2026 · Solana</span></div>
+ <h1 class="ht"><span class="l l1">Money,</span><span class="l l2"><i>folded</i> into</span><span class="l l3">a <em>link.</em></span></h1>
+ <svg class="stamp spin" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="c" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs><g filter="url(#ink)"><circle cx="100" cy="100" r="94" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" stroke-width="2"/><text font-family="IBM Plex Mono" font-size="17" font-weight="600" letter-spacing="5" fill="currentColor"><textPath href="#c">NO CUSTODY · NO SIGNUP · NO FUSS ·</textPath></text><text x="100" y="117" text-anchor="middle" font-family="Fraunces" font-weight="900" font-size="46" fill="currentColor">◎</text></g></svg>
+ <div class="side"><p class="dropcap">Put SOL in a red envelope, seal it, and send the link anywhere a link can go. Whoever opens it claims it — <u>no wallet address needed</u>.</p>
+ <a class="btn mag" href="/app.html"><span>Seal an envelope</span><b>→</b></a></div>
+ <svg class="doodle d1" viewBox="0 0 120 60" aria-hidden="true"><path d="M5 40 C30 5, 60 60, 90 20 S115 30, 112 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" filter="url(#rough)"/><path d="M104 6 l9 6 -10 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+ <p class="scroll mono">scroll to tear it open ↓</p>
 </section>
+
+<div class="marquee" aria-hidden="true"><div class="mq">Good fortune ✺ 0.888 SOL ✺ Lucky draw ✺ One link ✺ Gong xi fa cai ✺ Refund on expiry ✺ Good fortune ✺ 0.888 SOL ✺ Lucky draw ✺ One link ✺ Gong xi fa cai ✺ Refund on expiry ✺&nbsp;</div></div>
+
 <section class="pin" id="open"><div class="stage">
-  <div class="E"><div class="back"></div><div class="letter"><small>Good fortune</small><b class="neon" id="cnt">0.888</b><small>SOL</small></div><div class="front"></div><div class="flap"></div><div class="seal">◎</div></div>
-  <div class="caps"><p class="cap c1">① Fund <em>LOCK IT IN</em></p><p class="cap c2">② Open <em>BREAK THE SEAL</em></p><p class="cap c3">③ Received <em>IN YOUR WALLET</em></p></div>
+ <p class="bigbg" aria-hidden="true">開</p>
+ <div class="env">
+  <div class="letter"><span class="mono">For you —</span><b id="cnt">0.000</b><span class="mono">SOL · claimed</span></div>
+  <svg class="body" viewBox="0 0 280 400" aria-hidden="true"><rect x="0" y="40" width="280" height="360" rx="6" fill="#b5121b"/><g fill="none" stroke="#e8b54a" stroke-width="2" opacity=".85"><rect x="18" y="58" width="244" height="324" rx="3"/><path d="M40 330 q30-30 60 0 t60 0 t60 0"/></g><text x="140" y="290" text-anchor="middle" font-family="Fraunces" font-weight="900" font-size="120" fill="#e8b54a" filter="url(#ink)">福</text></svg>
+  <svg class="strip" viewBox="0 0 280 60" aria-hidden="true"><path d="M6 0 H274 a6 6 0 0 1 6 6 V44 l-10 8 -12 -9 -11 10 -13 -9 -10 9 -12 -10 -11 9 -13 -8 -11 10 -12 -9 -10 8 -13 -10 -11 9 -12 -9 -11 10 -12 -10 -10 9 -13 -8 -11 9 -12 -10 -11 10 -12 -9 -10 9 -12 -10 L0 44 V6 a6 6 0 0 1 6 -6Z" fill="#9c0d16"/><text x="140" y="30" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" letter-spacing="4" fill="#e8b54a">TEAR HERE ✂ - - - -</text></svg>
+ </div>
+ <ol class="caps mono"><li class="c1"><b>i.</b> Sealed. 0.888 SOL locked in a one-time escrow.</li><li class="c2"><b>ii.</b> Torn. The key rides after the <code>#</code> in your link.</li><li class="c3"><b>iii.</b> Claimed. Straight to their wallet. Gone in 400ms.</li></ol>
 </div></section>
+
 <section class="hpin" id="how"><div class="track">
- <div class="panel"><span class="num">01</span><h2>Create</h2><h3>PACK IT</h3><p>Connect Phantom or Solflare. Pick SOL or any SPL token, set the total, number of packets, equal or lucky-draw split, a message and an expiry.</p></div>
- <div class="panel"><span class="num">02</span><h2>Share</h2><h3>DROP THE LINK</h3><p>QR code, copy link, or one tap to X. The key lives after the # in the URL — it never touches our server.</p></div>
- <div class="panel"><span class="num">03</span><h2>Claim</h2><h3>GRAB IT</h3><p>Paste an address or spin up a browser wallet on the spot. The live leaderboard crowns the luckiest 👑</p></div>
- <div class="panel"><span class="num">04</span><h2>Refund</h2><h3>NOTHING LOST</h3><p>Unclaimed after expiry? One click sends every last lamport back to the sender.</p></div>
+ <div class="intro"><p class="mono">The ritual, in four acts</p><h2>How a<br><i>packet</i><br>travels.</h2></div>
+ <article class="act a1"><span class="no">01</span><h3>Pack it.</h3><p>Connect Phantom or Solflare. SOL or any SPL token. Set the total, how many packets, equal or lucky-draw, a note and an expiry.</p><svg viewBox="0 0 100 100" class="ill"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" filter="url(#rough)"><rect x="22" y="30" width="56" height="60" rx="4"/><path d="M22 30 L50 56 L78 30"/><circle cx="50" cy="20" r="8"/></g></svg></article>
+ <article class="act a2"><span class="no">02</span><h3>Drop the link.</h3><p>QR, copy, or one tap to X. The key lives after the <code>#</code> — browsers never send that part to our server.</p><svg viewBox="0 0 100 100" class="ill"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" filter="url(#rough)"><path d="M40 60 L60 40"/><path d="M45 35 l8-8 a12 12 0 0 1 17 17 l-8 8"/><path d="M55 65 l-8 8 a12 12 0 0 1 -17 -17 l8 -8"/></g></svg></article>
+ <article class="act a3"><span class="no">03</span><h3>Grab it.</h3><p>Paste an address, or spin up a fresh browser wallet on the spot. The leaderboard crowns the luckiest hand.</p><svg viewBox="0 0 100 100" class="ill"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" filter="url(#rough)"><path d="M25 70 L32 35 L45 55 L50 28 L55 55 L68 35 L75 70 Z"/><path d="M25 80 H75"/></g></svg></article>
+ <article class="act a4"><span class="no">04</span><h3>Nothing lost.</h3><p>Unclaimed by expiry? One click and every last lamport goes back to the sender.</p><svg viewBox="0 0 100 100" class="ill"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" filter="url(#rough)"><path d="M70 40 A24 24 0 1 0 74 60"/><path d="M62 38 L72 40 L74 30"/></g></svg></article>
 </div></section>
-<section class="trust"><h2 class="reveal">We never hold your money.</h2><p class="reveal">Every SolPacket gets its own one-time escrow wallet. Its key exists only inside your link.</p><p class="reveal">Our server just queues claims. It can't see the key, and it can't move the funds.</p>
- <div class="stats"><div><b class="neon">0</b><span>Custody</span></div><div><b class="neon">≈0.000005</b><span>SOL fee / claim</span></div><div><b class="neon">200</b><span>Packets max</span></div></div></section>
-<section class="final"><h2 class="reveal">Send one <span class="redneon">tonight</span>.</h2><a class="btn red" href="/app.html" style="margin-top:28px">🧧 Launch App</a><p class="mut" style="margin-top:40px">Devnet beta · Not audited · <a href="https://x.com/solpacket_app" target="_blank">@solpacket_app</a></p></section>
+
+<section class="collage" id="trust">
+ <div class="sticky"><h2 class="fold"><span>We never</span><span>hold your</span><span><em>money.</em></span></h2></div>
+ <div class="notes">
+  <div class="note n1"><span class="mono">exhibit a</span><p>Every packet gets its own one-time escrow wallet. Its key exists only inside your link.</p></div>
+  <div class="note n2 tape"><span class="mono">exhibit b</span><p>Our server just queues claims. It can't see the key and can't move the funds.</p></div>
+  <div class="note n3"><b class="num" data-to="0">0</b><span class="mono">custody, ever</span></div>
+  <div class="note n4 tape"><b class="num" data-to="200">0</b><span class="mono">packets per envelope, max</span></div>
+  <div class="note n5"><b>~0.000005</b><span class="mono">SOL fee per claim</span></div>
+ </div>
+</section>
+
+<section class="final">
+ <h2 class="fold big"><span>Send one</span><span><i>tonight.</i></span></h2>
+ <a class="btn mag red" href="/app.html"><span>Seal an envelope</span><b>→</b></a>
+ <footer class="mono"><span>Devnet beta · Not audited · Open source</span><a href="https://github.com/solpacket/solpacket" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/solpacket_app" target="_blank" rel="noopener">@solpacket_app</a></footer>
+</section>
 <script src="/landing.bundle.js"></script></body></html>
