@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/hero.png" width="300" alt="SolPacket"></p>
+<p align="center"><img src="docs/landing-hero.png" width="720" alt="SolPacket landing — Money, folded into a link."></p>
 
 <h1 align="center">SolPacket 🧧</h1>
 <p align="center"><b>On-chain red envelopes for Solana.</b><br>One link. One red envelope. No wallet needed to claim.</p>
@@ -12,11 +12,20 @@
 - **Claim**: paste any address, use your wallet, or generate an in-browser wallet (with key backup prompt).
 - **Leaderboard**: live list of claimers and amounts, luckiest-draw crown, remaining progress.
 - **Refund**: after expiry, unclaimed funds sweep back to the creator.
-- **Landing page**: GSAP ScrollTrigger + Lenis scroll-driven envelope opening, coin burst canvas, parallax, pinned horizontal cards; `prefers-reduced-motion` fallback.
+- **Landing page**: editorial red-and-gold paper design (cream stock, ink type, 開 watermark). Scroll tears open a red envelope and bursts coins and confetti, then a horizontal "how it works" run of pinned cards (GSAP ScrollTrigger + Lenis); `prefers-reduced-motion` fallback.
+- **EN / 繁體中文**: language toggle in the nav on both the landing and the app. Defaults to English, remembers your choice, `?lang=zh` deep link.
 
-| Create | Share | Claim |
-|---|---|---|
-| <img src="docs/create.png" width="240"> | <img src="docs/share.png" width="240"> | <img src="docs/claim.png" width="240"> |
+<p align="center"><img src="docs/landing-scroll.gif" width="560" alt="Scrolling the landing: the envelope tears open"></p>
+
+| Tear-open envelope | How it works |
+|---|---|
+| <img src="docs/landing-envelope.png" width="400"> | <img src="docs/landing-how-it-works.png" width="400"> |
+
+| Create | Share | Claim | Claimed |
+|---|---|---|---|
+| <img src="docs/app-create.png" width="200"> | <img src="docs/app-share.png" width="200"> | <img src="docs/app-claim.png" width="200"> | <img src="docs/app-result.png" width="200"> |
+
+<sub>Share screen: QR code and link blurred (the link contains the escrow key).</sub>
 
 ## How it works
 1. The creator's browser generates a **one-time escrow keypair** and funds it (amount + tiny fee/rent buffer) from the creator's wallet.
