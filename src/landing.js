@@ -1,5 +1,6 @@
 import gsap from 'gsap';import {ScrollTrigger} from 'gsap/ScrollTrigger';import Lenis from 'lenis';
 gsap.registerPlugin(ScrollTrigger);
+import I from './landing-i18n.js';
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,fine=matchMedia('(pointer:fine)').matches;
 // paper confetti + gold coins
 const cv=document.getElementById('fx'),cx=cv.getContext('2d');let P=[],dpr=Math.min(devicePixelRatio,2);
@@ -16,7 +17,7 @@ if(reduce){document.getElementById('cnt').textContent='0.888';document.querySele
 else{
  const lenis=new Lenis({lerp:.09});lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);window.__lenis=lenis;
  // hero: lines rise from their masks
- document.querySelectorAll('.ht .l').forEach(l=>{l.innerHTML=`<span class="w">${l.innerHTML}</span>`});
+ const wrap=()=>document.querySelectorAll('.ht .l').forEach(l=>{if(!l.querySelector('.w'))l.innerHTML=`<span class="w">${l.innerHTML}</span>`});wrap();
  gsap.from('.ht .w',{yPercent:110,rotate:4,stagger:.12,duration:1.2,ease:'expo.out'});
  gsap.from('.meta,.side>*,.scroll',{y:24,opacity:0,stagger:.1,delay:.5,duration:.9,ease:'power3.out'});
  gsap.from('.stamp',{scale:2.4,opacity:0,rotate:-60,delay:.9,duration:.5,ease:'back.out(2)',onComplete:()=>gsap.to('.stamp',{rotate:'+=360',duration:40,repeat:-1,ease:'none'})});
@@ -55,3 +56,9 @@ else{
   document.querySelectorAll('.mag').forEach(b=>{b.addEventListener('mouseenter',()=>c.classList.add('big'));b.addEventListener('mouseleave',()=>{c.classList.remove('big');gsap.to(b,{x:0,y:0,rotate:0,duration:.5,ease:'elastic.out(1,.4)'})});
    b.addEventListener('mousemove',e=>{const r=b.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;gsap.to(b,{x:x*.3,y:y*.4,rotate:x*.02,duration:.3})})})}
 }
+// language switch: re-split hero lines, replay the entrance, re-measure every ScrollTrigger
+I.onSwitch(()=>{if(reduce){document.getElementById('cnt').textContent='0.888';return}
+ document.querySelectorAll('.ht .l').forEach(l=>{if(!l.querySelector('.w'))l.innerHTML=`<span class="w">${l.innerHTML}</span>`});
+ gsap.fromTo('.ht .w',{yPercent:110,rotate:4},{yPercent:0,rotate:0,stagger:.1,duration:1,ease:'expo.out'});
+ document.fonts.ready.then(()=>requestAnimationFrame(()=>ScrollTrigger.refresh()));});
+if(!reduce)document.fonts&&document.fonts.ready.then(()=>ScrollTrigger.refresh());

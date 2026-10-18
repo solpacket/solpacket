@@ -1,4 +1,4 @@
-:root{--paper:#f1e4cc;--paper2:#e9d6b4;--ink:#1a1210;--red:#c8102e;--red2:#8f0a17;--gold:#d9a23a;--serif:"Fraunces",Georgia,"Times New Roman",serif;--disp:"Anton","Impact","Arial Narrow",sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+:root{--paper:#f1e4cc;--paper2:#e9d6b4;--ink:#1a1210;--red:#c8102e;--red2:#8f0a17;--gold:#d9a23a;--serif:"Fraunces","Noto Serif TC","Songti TC","PMingLiU",Georgia,"Times New Roman",serif;--disp:"Anton","Noto Sans TC","PingFang TC","Microsoft JhengHei","Impact","Arial Narrow",sans-serif;--mono:"IBM Plex Mono","Noto Sans TC",ui-monospace,monospace}
 *{box-sizing:border-box;margin:0;padding:0}html.lenis{height:auto}.lenis.lenis-smooth{scroll-behavior:auto}
 html,body{background:var(--paper);color:var(--ink);font-family:var(--serif);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit}.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
@@ -56,3 +56,16 @@ section{position:relative}
 @media (prefers-reduced-motion:reduce){.grain,.mq{animation:none}.caps li{position:static;opacity:1;margin-top:8px}.hpin{height:auto}.track{flex-direction:column;width:auto;padding:60px 20px;gap:30px}.act{margin:0!important}.stamp{transform:none}}
 .ht i{margin-right:.12em}.caps{width:min(420px,88vw)}.caps li{width:100%}
 @media (max-width:760px){.track{gap:14vw}.act:nth-child(odd){margin-top:4vh}.act:nth-child(even){margin-top:-4vh}}
+
+.lang{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:12px;border:1.5px solid var(--ink);padding:3px 6px;background:var(--paper)}
+.lang button{all:unset;cursor:pointer;padding:1px 4px;letter-spacing:.06em}.lang button.on{background:var(--ink);color:var(--paper)}.lang button:focus-visible{outline:2px solid var(--red)}
+.lang span{opacity:.4}
+html.zh .ht{letter-spacing:-.02em;line-height:1.02;font-size:clamp(56px,11.5vw,190px)}
+html.zh h2,html.zh .fold{letter-spacing:-.01em;line-height:1.06}
+html.zh h3{letter-spacing:0}
+html.zh .ht i,html.zh h2 i,html.zh .fold i{font-style:normal;font-weight:400}
+html.zh .dropcap,html.zh .act p,html.zh .note p{line-height:1.75;letter-spacing:.02em}
+html.zh .mono{letter-spacing:.12em}
+.nav nav a.ico{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1.5px solid var(--ink);background:var(--paper);transition:background .2s,color .2s}.nav nav a.ico:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:520px){.nav nav{gap:8px}.nav nav a.ico{width:26px;height:26px}}
+footer a.fl{display:inline-flex;align-items:center;gap:6px}
